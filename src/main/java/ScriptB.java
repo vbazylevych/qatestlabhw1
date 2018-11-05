@@ -43,13 +43,16 @@ public class ScriptB {
         wait.until(ExpectedConditions.elementToBeClickable(e));
 
         e.click();
-        Thread.sleep(300);
         String title = driver.findElement(className("page-title")).getText();
         System.out.println(title);
         driver.navigate().refresh();
-        Thread.sleep(15000);
+        Thread.sleep(2000);
         String title2 = driver.findElement(className("page-title")).getText();
         System.out.println(title);
+
+        Thread.sleep(2000);
+        driver.findElement(xpath("//nav/ul/li")).click();
+
     }
 
 
