@@ -2,6 +2,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -26,41 +27,33 @@ public class ScriptB {
 
         Thread.sleep(300);
 
-        List<WebElement> menu_li = driver.findElements(By.xpath(("//nav[@id='nav-sidebar']/ul/li[contains(@class,'maintab')]")));
+        int menuSize = driver.findElements(By.xpath(("//nav/ul/li[contains(@class,'maintab')]"))).size();
 
+        for (int i = 0; i < menuSize; i++) {
 
-        menu_li.forEach(e -> {
-            try {
-                click(e, driver);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-        });
+            List<WebElement> allMenuElements = driver.findElements(By.xpath(("//nav/ul/li[contains(@class,'maintab')]")));
+            allMenuElements.get(i).click();
+            writeTitleName(driver);
+            Thread.sleep(2000);
+
+            driver.navigate().refresh();
+            writeTitleName(driver);
+            Thread.sleep(2000);
+
+            driver.findElement(xpath("//nav/ul/li[1]")).click();
+            Thread.sleep(2000);
+        }
     }
 
-    private static void click(WebElement e, WebDriver driver) throws InterruptedException {
-        Wait<WebDriver> wait = new WebDriverWait(driver, 5).withMessage("Element was not found");
-        wait.until(ExpectedConditions.elementToBeClickable(e));
-
-        e.click();
-        String title = driver.findElement(className("page-title")).getText();
+    private static void writeTitleName(WebDriver driver) {
+        String title = driver.findElement(By.xpath("//h2")).getText();
         System.out.println(title);
-        driver.navigate().refresh();
-        Thread.sleep(2000);
-        String title2 = driver.findElement(className("page-title")).getText();
-        System.out.println(title);
-
-        Thread.sleep(2000);
-        driver.findElement(xpath("//nav/ul/li")).click();
-
     }
-
-
 
     public static WebDriver getDriver() {
-        System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "//src/main/resources/chromedriver.exe");
-        ChromeDriver chromeDriver = new ChromeDriver();
-        chromeDriver.manage().window().maximize();
-        return chromeDriver;
+        System.setProperty("webdriver.gecko.driver", System.getProperty("user.dir") + "//src/main/resources/geckodriver.exe");
+        FirefoxDriver driver = new FirefoxDriver();
+        driver.manage().window().maximize();
+        return driver;
     }
 }
